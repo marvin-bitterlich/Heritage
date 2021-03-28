@@ -1,20 +1,20 @@
 ﻿<Module>
-  <Name value="zenDzeeMods Heritage"/>
-  <Id value="zenDzeeMods_Heritage"/>
-  <Version value="v1.1.1"/>
+  <Name value="Heritage"/>
+  <Id value="Heritage"/>
+  <Version value="v1.2.0"/>
   <SingleplayerModule value="true"/>
   <MultiplayerModule value="false"/>
   <DependedModules>
-    <DependedModule Id="Native"/>
-    <DependedModule Id="SandBoxCore"/>
-    <DependedModule Id="Sandbox"/>
-    <DependedModule Id="StoryMode" />
+    <DependedModule Id="Native" DependentVersion="e1.5.8"/>
+    <DependedModule Id="SandBoxCore" DependentVersion="e1.5.8"/>
+    <DependedModule Id="Sandbox" DependentVersion="e1.5.8"/>
+    <DependedModule Id="StoryMode" DependentVersion="e1.5.8"/>
   </DependedModules>
   <SubModules>
     <SubModule>
-      <Name value="zenDzeeMods_Heritage"/>
-      <DLLName value="zenDzeeMods_Heritage.dll"/>
-      <SubModuleClassType value="zenDzeeMods_Heritage.SubModule"/>
+      <Name value="Heritage"/>
+      <DLLName value="Heritage.dll"/>
+      <SubModuleClassType value="Heritage.SubModule"/>
       <Tags>
         <Tag key="DedicatedServerType" value="none" />
         <Tag key="IsNoRenderModeElement" value="false" />

@@ -1,6 +1,8 @@
-# zenDzeeMods_Heritage
-Source code of zenDzeeMods_Heritage mod for the Bannerlord game.
+# Heritage
+Source code of the Heritage mod for the Bannerlord game.
+
+Forked from zenDzeeMods and updated for new versions and with new features
 
 ## How to build sources
-Open zenDzeeMods_Heritage.csproj in the notepad and edit property `<MNB2DIR>` according to location of your game.
-Now you can open zenDzeeMods_Heritage.sln in VisualStudio and build it.
+Open Heritage.csproj in the notepad and edit property `<MNB2DIR>` according to location of your game.
+Now you can open Heritage.sln in VisualStudio/Rider and build it.

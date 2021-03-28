@@ -2,7 +2,7 @@
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace zenDzeeMods_Heritage
+namespace Heritage
 {
     public class SubModule : MBSubModuleBase
     {
@@ -10,6 +10,8 @@ namespace zenDzeeMods_Heritage
         {
             if (game.GameType is Campaign)
             {
+                Utils.Print("Hello from Heritage Logger :) We are in campaign mode");
+
                 CampaignGameStarter campaignStarter = (CampaignGameStarter)gameStarter;
 
                 campaignStarter.AddBehavior(new HeritageBehavior());

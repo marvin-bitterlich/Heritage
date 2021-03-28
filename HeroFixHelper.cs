@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.Localization;
 
-namespace zenDzeeMods
+namespace Heritage
 {
     internal class HeroFixHelper
     {

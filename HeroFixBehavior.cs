@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
-using zenDzeeMods;
 
-namespace zenDzeeMods_Heritage
+namespace Heritage
 {
     internal class HeroFixBehavior : CampaignBehaviorBase
     {
@@ -66,26 +63,5 @@ namespace zenDzeeMods_Heritage
                 }
             }
         }
-
-// Should be fixed by e1.4.3
-#if false
-        private void OnDailyTick(Hero hero)
-        {
-            if (!hero.IsTemplate && !hero.IsMinorFactionHero && hero.IsNoble)
-            {
-                if (hero.IsAlive && (hero.Age - hero.DynamicBodyProperties.Age) > 1f)
-                {
-                    DynamicBodyProperties dp = hero.DynamicBodyProperties;
-                    dp.Age = hero.Age;
-                    hero.DynamicBodyProperties = dp;
-                }
-
-                if ((int)hero.BirthDay.ElapsedDaysUntilNow % CampaignTime.DaysInYear == 0)
-                {
-                    OnHeroGrows(hero);
-                }
-            }
-        }
-#endif
     }
 }

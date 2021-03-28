@@ -4,7 +4,7 @@ using System.Reflection;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 
-namespace zenDzeeMods
+namespace Heritage
 {
     internal class ZenDzeeCompatibilityHelper
     {

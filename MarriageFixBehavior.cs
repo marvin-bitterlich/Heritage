@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System;
-using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Barterables;
 using System.Text.RegularExpressions;
-using Helpers;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Barterables;
 
-namespace zenDzeeMods_Heritage
+namespace Heritage
 {
     internal class MarriageFixBehavior : CampaignBehaviorBase
     {

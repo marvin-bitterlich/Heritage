@@ -1,6 +1,6 @@
 ﻿using TaleWorlds.Core;
 
-namespace zenDzeeMods
+namespace Heritage
 {
     internal class StaticBodySliders
     {

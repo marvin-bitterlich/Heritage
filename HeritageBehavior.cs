@@ -1,13 +1,13 @@
-﻿using Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
-using zenDzeeMods;
+using TaleWorlds.Localization;
 
-namespace zenDzeeMods_Heritage
+namespace Heritage
 {
     internal class HeritageBehavior : CampaignBehaviorBase
     {
@@ -146,15 +146,20 @@ namespace zenDzeeMods_Heritage
             newLeader = Hero.OneToOneConversationHero;
             leader = Hero.MainHero;
 
-            if (newLeader.PartyBelongedTo == null || newLeader != newLeader.PartyBelongedTo.LeaderHero)
+            Utils.Print($"[ConsequenceChangeClanLeader] current leader {leader.Name} new leader {newLeader.Name}");
+            if (newLeader.PartyBelongedTo != leader.PartyBelongedTo)
             {
-                MobilePartyHelper.CreateNewClanMobileParty(newLeader, leader.Clan, out _);
-            }
+                if (newLeader.PartyBelongedTo == null || newLeader != newLeader.PartyBelongedTo.LeaderHero)
+                {
+                    MobilePartyHelper.CreateNewClanMobileParty(newLeader, leader.Clan, out _);
+                }
 
-            if (leader.PartyBelongedTo != null && leader.PartyBelongedTo.CurrentSettlement != null)
-            {
-                EnterSettlementAction.ApplyForParty(newLeader.PartyBelongedTo, leader.PartyBelongedTo.CurrentSettlement);
-                LeaveSettlementAction.ApplyForParty(leader.PartyBelongedTo);
+                if (leader.PartyBelongedTo?.CurrentSettlement != null)
+                {
+                    EnterSettlementAction.ApplyForParty(newLeader.PartyBelongedTo,
+                        leader.PartyBelongedTo.CurrentSettlement);
+                    LeaveSettlementAction.ApplyForParty(leader.PartyBelongedTo);
+                }
             }
 
             CampaignEvents.TickEvent.AddNonSerializedListener(this, OnChangeClanLeader);
@@ -165,7 +170,9 @@ namespace zenDzeeMods_Heritage
             MobileParty leaderParty = leader.PartyBelongedTo;
             MobileParty newLeaderParty = newLeader.PartyBelongedTo;
 
-            if (leader == null || newLeader == null || leaderParty == null || newLeaderParty == null || leaderParty == newLeaderParty)
+            Utils.Print($"[OnChangeClanLeader] current leader {leader.Name} new leader {newLeader.Name}");
+            
+            if (leader == null || newLeader == null || leaderParty == null || newLeaderParty == null)
             {
                 return;
             }
@@ -178,19 +185,6 @@ namespace zenDzeeMods_Heritage
             {
                 ChangeGovernorAction.ApplyByGiveUpCurrent(leader);
             }
-
-// Should be fixed by e1.4.3
-#if false
-            var qm = Campaign.Current.QuestManager;
-            if (qm != null)
-            {
-                QuestBase q;
-                while ((q = qm.Quests.FirstOrDefault(s => !s.IsSpecialQuest)) != null)
-                {
-                    q.CompleteQuestWithFail();
-                }
-            }
-#endif
 
             string evt;
             while ((evt = newLeader.GetHeroOccupiedEvents().FirstOrDefault()) != default)
@@ -205,33 +199,63 @@ namespace zenDzeeMods_Heritage
             GiveGoldAction.ApplyBetweenCharacters(leader, newLeader, leader.Gold, true);
 
             leader.Clan.SetLeader(newLeader);
+
+            Settlement currentSettlement = newLeaderParty.CurrentSettlement;
+            
             ChangePlayerCharacterAction.Apply(newLeader);
 
-            TroopRosterElement t;
-            while (leaderParty.MemberRoster.Count(x => x.Character != leader.CharacterObject) > 0)
+            if (newLeaderParty != leaderParty)
             {
-                t = leaderParty.MemberRoster.First(x => x.Character != leader.CharacterObject);
-                leaderParty.MemberRoster.AddToCounts(t.Character, -t.Number);
-                newLeaderParty.MemberRoster.AddToCounts(t.Character, t.Number);
+                if (newLeaderParty.CurrentSettlement == null)
+                {
+                    EnterSettlementAction.ApplyForParty(newLeaderParty, currentSettlement);
+                }
+
+                foreach (var troop in leaderParty.MemberRoster.GetTroopRoster())
+                {
+                    if (troop.Character == leader.CharacterObject)
+                    {
+                        continue;
+                    }
+
+                    leaderParty.MemberRoster.AddToCounts(troop.Character, -troop.Number);
+                    newLeaderParty.MemberRoster.AddToCounts(troop.Character, troop.Number);
+                }
+
+                foreach (var troop in leaderParty.PrisonRoster.GetTroopRoster())
+                {
+                    if (troop.Character == leader.CharacterObject)
+                    {
+                        continue;
+                    }
+
+                    leaderParty.PrisonRoster.AddToCounts(troop.Character, -troop.Number);
+                    newLeaderParty.PrisonRoster.AddToCounts(troop.Character, troop.Number);
+                }
+
+                ItemRosterElement i;
+                while (leaderParty.ItemRoster.Count() > 0)
+                {
+                    i = leaderParty.ItemRoster.First();
+                    leaderParty.ItemRoster.AddToCounts(i.EquipmentElement, -i.Amount);
+                    newLeaderParty.ItemRoster.AddToCounts(i.EquipmentElement, i.Amount);
+                }
+                
+                leaderParty.RemoveParty();
+                AddHeroToPartyAction.Apply(leader, newLeaderParty);
+            }
+            else
+            {
+                leaderParty.Party.Owner = newLeader;
+                var partyList = leaderParty.Party.MemberRoster;
+                partyList.RemoveTroop(newLeader.CharacterObject);
+                partyList.AddToCounts(newLeader.CharacterObject, 1, true);
+                var newPartyName = new TextObject("{=shL0WElC}{TROOP.NAME}'s Party");
+                newPartyName.SetCharacterProperties("TROOP", newLeader.CharacterObject);
+                leaderParty.SetCustomName(newPartyName);
             }
 
-            while (leaderParty.PrisonRoster.Count() > 0)
-            {
-                t = leaderParty.PrisonRoster.First();
-                leaderParty.PrisonRoster.AddToCounts(t.Character, -t.Number);
-                newLeaderParty.PrisonRoster.AddToCounts(t.Character, t.Number);
-            }
-
-            ItemRosterElement i;
-            while (leaderParty.ItemRoster.Count() > 0)
-            {
-                i = leaderParty.ItemRoster.First();
-                leaderParty.ItemRoster.AddToCounts(i.EquipmentElement, -i.Amount);
-                newLeaderParty.ItemRoster.AddToCounts(i.EquipmentElement, i.Amount);
-            }
-
-            leaderParty.RemoveParty();
-            AddHeroToPartyAction.Apply(leader, newLeaderParty);
+            leader.HasMet = true;
 
             newLeader.Clan.Influence = Math.Max(0, newLeader.Clan.Influence - 100);
 
@@ -241,6 +265,7 @@ namespace zenDzeeMods_Heritage
             newLeader = null;
             leader = null;
             CampaignEvents.RemoveListeners(this);
+            Utils.Print($"[OnChangeClanLeader] changed over");
         }
 
         private bool ConditionChangeClanLeader()

@@ -1,8 +1,8 @@
 ﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Main Project Properties -->
   <PropertyGroup>
-    <MNB2DIR>C:\Games_steam\steam\steamapps\common\Mount &amp; Blade II Bannerlord</MNB2DIR>
-    <MOD_ID>zenDzeeMods_Heritage</MOD_ID>
+    <MNB2DIR>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</MNB2DIR>
+    <MOD_ID>Heritage</MOD_ID>
     <MOD_OUTDIR>$(MNB2DIR)\Modules</MOD_OUTDIR>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,9 +13,10 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>$(MOD_ID)</RootNamespace>
-    <AssemblyName>$(MOD_ID)</AssemblyName>
+    <AssemblyName>Heritage</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <!-- Debug Configuration Properties -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -78,6 +79,7 @@
     <Compile Include="SubModule.cs" />
     <Compile Include="StaticBodySliders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="ZenDzeeCompatibilityHelper.cs" />
     <Content Include="SubModule.xml" />
     <Content Include="ModuleData\Languages\*.xml" />
