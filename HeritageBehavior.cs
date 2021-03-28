@@ -6,6 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Menu.Overlay;
 
 namespace Heritage
 {
@@ -262,6 +263,9 @@ namespace Heritage
             HeroFixHelper.FixHeroStats(newLeader);
             HeroFixHelper.FixEquipment(newLeader);
 
+            newLeaderParty.Party.Visuals.SetMapIconAsDirty();
+            CampaignEventDispatcher.Instance.OnArmyOverlaySetDirty();
+
             newLeader = null;
             leader = null;
             CampaignEvents.RemoveListeners(this);
@@ -276,6 +280,9 @@ namespace Heritage
                 && Hero.OneToOneConversationHero.Clan == Clan.PlayerClan
                 && Hero.MainHero == Clan.PlayerClan.Leader
                 && Hero.MainHero.PartyBelongedTo != null
+                && Hero.MainHero.PartyBelongedTo.Army == null
+                && Hero.OneToOneConversationHero.PartyBelongedTo?.Army == null
+                && Hero.OneToOneConversationHero.PartyBelongedTo == Hero.MainHero.PartyBelongedTo
                 && (IsFamilyMember(Hero.MainHero, Hero.OneToOneConversationHero) || IsMarried(Hero.MainHero, Hero.OneToOneConversationHero) || IsBloodRelated(Hero.MainHero, Hero.OneToOneConversationHero));
         }
 
