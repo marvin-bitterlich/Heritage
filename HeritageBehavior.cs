@@ -73,7 +73,7 @@ namespace Heritage
 
         private void PrepareCharacterWindow_Internal()
         {
-            characterWindowSettlement = characterWindowHero.StayingInSettlementOfNotable;
+            characterWindowSettlement = characterWindowHero.StayingInSettlement;
 
             characterWindowEvents = new List<string>(characterWindowHero.GetHeroOccupiedEvents());
             string evt;
@@ -134,7 +134,7 @@ namespace Heritage
                     characterWindowHero.AddEventForOccupiedHero(e);
                 }
 
-                characterWindowHero.StayingInSettlementOfNotable = characterWindowSettlement;
+                characterWindowHero.StayingInSettlement = characterWindowSettlement;
             }
 
             characterWindowHero = null;
